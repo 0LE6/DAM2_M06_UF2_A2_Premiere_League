@@ -10,16 +10,17 @@ import java.sql.CallableStatement;
 import MODEL.Match;
 import MODEL.Team;
 
-public class DAOManagerJDBCImpl implements DAOManager, AutoCloseable{
+public class DAOManagerJDBCImpl implements DAOManager{
 
 	private final String JDBC_URL = "jdbc:mysql://localhost:3306/1premiereleague?serverTimezone=UTC";
 	private final String USER = "root";
 	private final String PASSWORD = "";
-	private Connection con;
+	private Connection connection;
 	
+	// Constructor to make an connection 
 	public DAOManagerJDBCImpl() {
 		try {
-			this.con = DriverManager.getConnection(
+			this.connection = DriverManager.getConnection(
 					this.JDBC_URL, 
 					this.USER, 
 					this.PASSWORD);
@@ -34,30 +35,29 @@ public class DAOManagerJDBCImpl implements DAOManager, AutoCloseable{
         boolean success = false;
         try {
         	// AutoCommit -> OFF
-            con.setAutoCommit(false);
+            connection.setAutoCommit(false);
 
             String storedProcedureCall = "{call AddTeam(?, ?, ?, ?)}";
-            CallableStatement cS = con.prepareCall(storedProcedureCall);
+            CallableStatement cS = connection.prepareCall(storedProcedureCall);
             cS.setString(1, oneTeam.getClubName());
             cS.setString(2, oneTeam.getAbv());
             cS.setString(3, oneTeam.getHexCode());
             cS.setString(4, oneTeam.getLogoLink());
 
             success = cS.execute();
-
-            if (success) con.commit();
+            if (success) connection.commit();
             
         } catch (SQLException e) {
             success = false;
             e.printStackTrace();
             try {
-                con.rollback();
+                connection.rollback();
             } catch (SQLException rollbackException) {
                 rollbackException.printStackTrace();
             }
         } finally {
             try {
-                con.setAutoCommit(true);
+                connection.setAutoCommit(true);
                 close();
             } catch (SQLException autoCommitException) {
                 autoCommitException.printStackTrace();
@@ -135,8 +135,8 @@ public class DAOManagerJDBCImpl implements DAOManager, AutoCloseable{
 	
 	@Override
     public void close() throws SQLException {
-        if (con != null && !con.isClosed()) {
-            con.close();
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
         }
     }
 
