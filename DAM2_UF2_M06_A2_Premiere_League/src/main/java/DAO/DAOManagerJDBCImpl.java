@@ -75,8 +75,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 		    BufferedReader bR = new BufferedReader(new InputStreamReader(fis))) {
 
 		    String line;
-
-		    bR.readLine(); // La primera línea es ignorada, ¿es intencional?
+		    bR.readLine(); // Avoiding the 1st line
 
 		    while ((line = bR.readLine()) != null) {
 		        String[] fields = line.split(",");
@@ -84,9 +83,8 @@ public class DAOManagerJDBCImpl implements DAOManager{
 		        Team team = new Team(fields[0], fields[1], fields[2], fields[3]);
 		        AddTeam(team);
 		    }
-
+ 
 			} catch (IOException ex) { ex.printStackTrace(); }
-
 	}
 
 	@Override
