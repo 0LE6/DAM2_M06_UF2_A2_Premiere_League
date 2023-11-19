@@ -23,7 +23,10 @@ public class MainTest {
 		System.out.println(dao.GetTeam("CRY"));
 		
 		// Method 4
-
+		System.out.println(dao.GetTeamAbbreviation("Man City"));
+		
+		// Method 5
+		
 	}
 
 }

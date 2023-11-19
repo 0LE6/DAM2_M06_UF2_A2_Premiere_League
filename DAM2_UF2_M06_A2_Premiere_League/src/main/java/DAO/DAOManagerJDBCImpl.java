@@ -101,8 +101,8 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	        if (found) {
 	            // we enter here and process it w/ ResultSet
 	            try (ResultSet resultSet = callableStatement.getResultSet()) {
-	                // Try-Catch to process the ResultSet
-	                if (resultSet.next()) { /* if there's any */
+	                // Try-With-Resources to process the ResultSet and autoClose it
+	                if (resultSet.next()) { /* if there's next, create a team */
 	                    team = new Team(
 	                            resultSet.getString("club_name"),
 	                            teamAbbreviation,
@@ -119,9 +119,25 @@ public class DAOManagerJDBCImpl implements DAOManager{
 
 	@Override
 	public String GetTeamAbbreviation(String teamName) {
-		// TODO Auto-generated method stub
-		return null;
+		
+	    String equipName = null;
+
+	    try (CallableStatement callableStatement = connection.prepareCall("{call GetTeamAbbreviation(?,?)}")) {
+	        
+	    	callableStatement.setString(1, teamName);
+	        callableStatement.registerOutParameter(2, Types.VARCHAR);
+
+	        callableStatement.execute(); 
+
+	        equipName = callableStatement.getString(2);
+	        
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return equipName;
 	}
+
 
 	@Override
 	public boolean AddMatch(Match oneMatch) {
