@@ -8,12 +8,6 @@ import MODEL.Team;
 public class DAOManagerJDBCImpl implements DAOManager{
 
 	@Override
-	public void close() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public boolean AddTeam(Team oneTeam) {
 		// TODO Auto-generated method stub
 		return false;
@@ -83,6 +77,12 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	public ArrayList<Team> TopRedCards() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public void close() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
