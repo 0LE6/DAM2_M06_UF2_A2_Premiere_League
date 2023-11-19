@@ -15,6 +15,7 @@ public class ManagerTestInteractive {
 		DAOManagerFactory daoFac = new DAOManagerFactory();
 		DAOManager dao = daoFac.createDAOManager();
 		
+		// Methods 1 & 2:
 		dao.ImportTeams(CLUBS_FILE);
 
 
