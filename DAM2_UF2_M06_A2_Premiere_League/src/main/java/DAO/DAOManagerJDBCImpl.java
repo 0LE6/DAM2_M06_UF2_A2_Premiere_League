@@ -5,6 +5,10 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.CallableStatement;
 
 import MODEL.Match;
@@ -62,11 +66,26 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	}
 
 
-
 	@Override
 	public void ImportTeams(String fileTeams) {
-		// TODO Auto-generated method stub
-		
+
+		try (
+			FileInputStream fis = new FileInputStream(fileTeams);
+		    BufferedReader bR = new BufferedReader(new InputStreamReader(fis))) {
+
+		    String line;
+
+		    bR.readLine(); // La primera línea es ignorada, ¿es intencional?
+
+		    while ((line = bR.readLine()) != null) {
+		        String[] fields = line.split(",");
+
+		        Team team = new Team(fields[0], fields[1], fields[2], fields[3]);
+		        AddTeam(team);
+		    }
+
+			} catch (IOException ex) { ex.printStackTrace(); }
+
 	}
 
 	@Override
