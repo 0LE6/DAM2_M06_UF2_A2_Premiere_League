@@ -89,8 +89,9 @@ public class DAOManagerJDBCImpl implements DAOManager{
 
 	@Override
 	public Team GetTeam(String teamAbbreviation) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Team team = null;
+		return team;
 	}
 
 	@Override
