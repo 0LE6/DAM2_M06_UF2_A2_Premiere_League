@@ -16,9 +16,11 @@ public class MainTest {
 		DAOManagerFactory daoFac = new DAOManagerFactory();
 		DAOManager dao = daoFac.createDAOManager();
 		
-		// Methods 1 & 2:
-		dao.ImportTeams(CLUBS_FILE);
-		System.out.println("Funciona?");
+		// Methods 1 & 2
+		//dao.ImportTeams(CLUBS_FILE);
+		
+		// Method 3
+		System.out.println(dao.GetTeam("MNC"));
 
 	}
 

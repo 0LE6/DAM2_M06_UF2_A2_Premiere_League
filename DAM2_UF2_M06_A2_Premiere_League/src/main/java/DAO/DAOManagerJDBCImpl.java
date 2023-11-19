@@ -3,7 +3,9 @@ package DAO;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -59,9 +61,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 		        e.printStackTrace();
 		    } finally { connection.setAutoCommit(true); /* AutoCommit -> ON */ }
 	    	
-	    } catch (SQLException e) {
-			e.printStackTrace();
-	    }
+	    } catch (SQLException e) { e.printStackTrace(); }
 	    
 	    return success;
 	}
@@ -91,6 +91,29 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	public Team GetTeam(String teamAbbreviation) {
 		
 		Team team = null;
+		boolean found = false;
+		try (CallableStatement callableStatement = connection.prepareCall("call GetTeam(?)")) {
+			
+			try {
+				// Passing the IN parameter
+				callableStatement.setString(1,  teamAbbreviation);
+				found = callableStatement.execute(); 
+
+				if (found) {
+	                ResultSet resultSet = callableStatement.getResultSet();
+	                try {
+	                    if (resultSet.next()) {
+	                        team = new Team(
+	                                resultSet.getString("club_name"),
+	                                teamAbbreviation,
+	                                resultSet.getString("hex_code"),
+	                                resultSet.getString("logo_link"));
+	                    }
+	                } finally { resultSet.close(); }
+	            }
+								
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e) { e.printStackTrace(); }
 		
 		return team;
 	}
