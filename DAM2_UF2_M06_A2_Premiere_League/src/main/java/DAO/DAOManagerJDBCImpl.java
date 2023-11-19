@@ -50,6 +50,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 		        callableStatement.setString(2, oneTeam.getAbv());
 		        callableStatement.setString(3, oneTeam.getHexCode());
 		        callableStatement.setString(4, oneTeam.getLogoLink());
+		        callableStatement.execute();
 
 		        connection.commit(); // if there's no problem, it'll commit
 		        
