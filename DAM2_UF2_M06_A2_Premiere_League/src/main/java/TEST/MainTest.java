@@ -2,10 +2,10 @@ package TEST;
 
 import DAO.DAOManager;
 import DAO.DAOManagerFactory;
+import MODEL.Match;
 import MODEL.Team;
 
 import java.sql.Date;
-import java.sql.Time;
 
 public class MainTest {
 
@@ -38,6 +38,23 @@ public class MainTest {
 		System.out.println(dao.GetMatch(dateOfMatch, homeTeam, awayTeam));
 		
 		// Methods 8 & 9
+		System.out.println("The Total Home Goals are --> " + dao.HomeGoals());
+		System.out.println("The Total Away Goals are --> " + dao.AwayGoals());
+		
+		// Method 10
+		int count = 0;
+		for (Match match : dao.MatchesOfTeam(homeTeam)) {
+			
+			count++;
+			System.out.println(count + "->" + match);
+		}
+		
+		
+		// Method 11
+		
+		
+		
+		// Method 12
 		
 	}
 

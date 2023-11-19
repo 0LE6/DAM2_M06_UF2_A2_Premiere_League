@@ -304,21 +304,93 @@ public class DAOManagerJDBCImpl implements DAOManager{
 
 	@Override
 	public int HomeGoals() {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int totalHomeGoals = 0;
+
+	    try (CallableStatement callableStatement = connection.prepareCall("CALL GetHomeGoals(?)")) {
+	    	
+	        callableStatement.registerOutParameter(1, Types.INTEGER); /* managing the OUT parameter */
+	        callableStatement.execute();
+	        totalHomeGoals = callableStatement.getInt(1);
+	        
+	    } catch (SQLException e) { e.printStackTrace(); }
+
+	    return totalHomeGoals;
 	}
 
 	@Override
 	public int AwayGoals() {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int totalAwayGoals = 0;
+
+	    try (CallableStatement callableStatement = connection.prepareCall("CALL GetAwayGoals(?)")) {
+	    	
+	        callableStatement.registerOutParameter(1, Types.INTEGER); /* managing the OUT parameter */
+	        callableStatement.execute();
+	        totalAwayGoals = callableStatement.getInt(1);
+	        
+	    } catch (SQLException e) { e.printStackTrace(); }
+
+	    return totalAwayGoals;
 	}
 
 	@Override
 	public ArrayList<Match> MatchesOfTeam(Team oneTeam) {
-		// TODO Auto-generated method stub
-		return null;
+		
+	    ArrayList<Match> arrayListOfMatches = new ArrayList<>();
+
+	    try (CallableStatement callableStatement = 
+	    		connection.prepareCall("{call GetMatchesOfTeam(?)}")) {
+
+	        // Setting our IN parameter
+	        callableStatement.setString(1, oneTeam.getAbv());
+	        
+	        boolean found = callableStatement.execute();
+
+	        // If there's any result
+	        if (found) {
+	            // Process the ResultSet
+	            try (ResultSet resultSet = callableStatement.getResultSet()) {
+	                // Try-With-Resources to process the ResultSet and auto-close it
+	                while (resultSet.next()) {
+	                    // For each match, create a Match object and add it to the list
+	                    Match match = new Match(
+	                    		resultSet.getString("Division"),
+	                            resultSet.getDate("DateOfMatch"),
+	                            resultSet.getTime("TimeOfMatch"),
+	                            resultSet.getString("HomeTeamAbv"),
+	                            resultSet.getString("AwayTeamAbv"),
+	                            resultSet.getInt("FTHG"),
+	                            resultSet.getInt("FTAG"),
+	                            resultSet.getString("FTR"),
+	                            resultSet.getInt("HTHG"),
+	                            resultSet.getInt("HTAG"),
+	                            resultSet.getString("HTR"),
+	                            resultSet.getString("Referee"),
+	                            resultSet.getInt("HS"),
+	                            resultSet.getInt("ASS"),
+	                            resultSet.getInt("HST"),
+	                            resultSet.getInt("AST"),
+	                            resultSet.getInt("HF"),
+	                            resultSet.getInt("AF"),
+	                            resultSet.getInt("HC"),
+	                            resultSet.getInt("AC"),
+	                            resultSet.getInt("HY"),
+	                            resultSet.getInt("AY"),
+	                            resultSet.getInt("HR"),
+	                            resultSet.getInt("AR"));
+
+	                    arrayListOfMatches.add(match);
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return arrayListOfMatches;
 	}
+
 
 	@Override
 	public int RedCards(Team oneTeam) {
