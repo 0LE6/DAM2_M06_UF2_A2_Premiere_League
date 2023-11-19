@@ -33,11 +33,10 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	@Override
 	public boolean AddTeam(Team oneTeam) {
 		
-	    boolean success = true; // if everything is OK i'll return true
+	    boolean success = true; // if everything is OK it'll return true
 	    
 	    // Using : try-with-resources to manage the Statement
-	    try (CallableStatement callableStatement 
-	    		= connection.prepareCall("{call AddTeam(?, ?, ?, ?)}")) {
+	    try (CallableStatement callableStatement = connection.prepareCall("{call AddTeam(?, ?, ?, ?)}")) {
 	        
 	    	try {
 	    		// AutoCommit -> OFF
@@ -53,7 +52,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	    	} catch (SQLException e) {
 		        success = false; // if there's a problem, it'll return false
 		        e.printStackTrace();
-		    } finally { connection.setAutoCommit(true); }
+		    } finally { connection.setAutoCommit(true); /* AutoCommit -> ON */ }
 	    	
 	    } catch (SQLException e) {
 			e.printStackTrace();
