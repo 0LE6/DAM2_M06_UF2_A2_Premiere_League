@@ -1,17 +1,66 @@
 package DAO;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.CallableStatement;
+
 import MODEL.Match;
 import MODEL.Team;
 
-public class DAOManagerJDBCImpl implements DAOManager{
+public class DAOManagerJDBCImpl implements DAOManager, AutoCloseable{
 
-	@Override
-	public boolean AddTeam(Team oneTeam) {
-		// TODO Auto-generated method stub
-		return false;
+	private final String JDBC_URL = "jdbc:mysql://localhost:3306/1premiereleague?serverTimezone=UTC";
+	private  final String USER = "root";
+	private  final String PASSWORD = "";
+	private Connection con;
+	
+	public DAOManagerJDBCImpl() throws SQLException {
+		this.con = DriverManager.getConnection(
+				this.JDBC_URL, 
+				this.USER, 
+				this.PASSWORD);
 	}
+	
+	@Override
+    public boolean AddTeam(Team oneTeam) {
+        boolean success = false;
+        try {
+        	// AutoCommit -> OFF
+            con.setAutoCommit(false);
+
+            String storedProcedureCall = "{call AddTeam(?, ?, ?, ?)}";
+            CallableStatement cS = con.prepareCall(storedProcedureCall);
+            cS.setString(1, oneTeam.getClubName());
+            cS.setString(2, oneTeam.getAbv());
+            cS.setString(3, oneTeam.getHexCode());
+            cS.setString(4, oneTeam.getLogoLink());
+
+            success = cS.execute();
+
+            if (success) con.commit();
+            
+        } catch (SQLException e) {
+            success = false;
+            e.printStackTrace();
+            try {
+                con.rollback();
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+        } finally {
+            try {
+                con.setAutoCommit(true);
+                close();
+            } catch (SQLException autoCommitException) {
+                autoCommitException.printStackTrace();
+            }
+            
+        }
+        return success;
+    }
 
 	@Override
 	public void ImportTeams(String fileTeams) {
@@ -80,9 +129,10 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	}
 	
 	@Override
-	public void close() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    public void close() throws SQLException {
+        if (con != null && !con.isClosed()) {
+            con.close();
+        }
+    }
 
 }
