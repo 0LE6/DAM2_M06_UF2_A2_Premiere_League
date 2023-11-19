@@ -4,30 +4,30 @@ import java.sql.Date;
 import java.sql.Time;
 
 public class Match {
-    private String div;
+    private String div; // division
     private Date date;
     private Time time;
     private String homeTeamAbv;
     private String awayTeamAbv;
-    private int fthg;
-    private int ftag;
-    private String ftr;
-    private int hthg;
-    private int htag;
-    private String htr;
+    private int fthg; // full time home goals
+    private int ftag; // full time away goals
+    private String ftr; // full time result
+    private int hthg; // halftime home goals
+    private int htag; // halftime away goals
+    private String htr; // halftime result
     private String referee;
-    private int hs;
-    private int as;
-    private int hst;
-    private int ast;
-    private int hf;
-    private int af;
-    private int hc;
-    private int ac;
-    private int hy;
-    private int ay;
-    private int hr;
-    private int ar;
+    private int hs; // home team shots
+    private int as; // away team shots
+    private int hst; // home team shots on goal
+    private int ast; // away team shots on goal
+    private int hf; // home team fouls
+    private int af; // away team fouls
+    private int hc; // home team corners
+    private int ac; // away team corners
+    private int hy; // home team yellow cards
+    private int ay; // away team yellow cards
+    private int hr; // home team red cards
+    private int ar; // away team red cards
 
     // Constructor
     public Match(String div, Date date, Time time, String homeTeamAbv, String awayTeamAbv, int fthg, int ftag,
