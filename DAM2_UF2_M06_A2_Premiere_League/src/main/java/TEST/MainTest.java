@@ -20,7 +20,7 @@ public class MainTest {
 		//dao.ImportTeams(CLUBS_FILE);
 		
 		// Method 3
-		System.out.println(dao.GetTeam("MNC"));
+		System.out.println(dao.GetTeam("CRY"));
 
 	}
 
