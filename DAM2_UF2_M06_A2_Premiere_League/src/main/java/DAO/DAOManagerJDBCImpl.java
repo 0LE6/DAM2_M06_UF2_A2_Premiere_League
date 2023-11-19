@@ -77,8 +77,8 @@ public class DAOManagerJDBCImpl implements DAOManager{
 			FileInputStream fis = new FileInputStream(fileTeams);
 		    BufferedReader bR = new BufferedReader(new InputStreamReader(fis))) {
 
-		    String line = bR.readLine();;
-		    line = bR.readLine(); // Avoiding the 1st line
+		    String line = bR.readLine(); // Avoiding the 1st line
+		    line = bR.readLine(); 
 
 		    while (line != null) {
 		        String[] fields = line.split(",");
@@ -203,36 +203,31 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	    try (FileReader fR = new FileReader(fileMatches);
 	         BufferedReader bR = new BufferedReader(fR);
 	    ){
-	        String line = bR.readLine();; 
-	        line = bR.readLine(); // Evitar la primera línea (encabezados)
+	        String line = bR.readLine(); // Avoiding the 1st line 
+	        line = bR.readLine(); 
 
 	        while (line != null) {
 	        	
 	            String[] fields = line.split(",");
-	            
-	            // TEST
-	            for (String field : fields) { System.out.println(field); }
 	            String[] fieldsDate = fields[1].split("/");
 	            
-	            // TEST
-	            for (String field : fieldsDate) { System.out.println(field); }
-	            
+	            // Getting the YYYY-MM-DD
 	            LocalDate localDate = LocalDate.of(Integer.parseInt(fieldsDate[2]),
                         Integer.parseInt(fieldsDate[1]),
                         Integer.parseInt(fieldsDate[0]));
 	            
-	            // TEST
-	            System.out.println(localDate);
-	            
-				// Convertir LocalDate a java.sql.Date
+				// Conversion from LocalDate to SQL Date
 				Date date = Date.valueOf(localDate);
 
+				// Getting the time
 	            Time time = Time.valueOf(fields[2] + ":00");
-
+ 
 	            Match match = new Match(
 	            		fields[0], date, time, fields[3], fields[4],
-                        Integer.parseInt(fields[5]), Integer.parseInt(fields[6]),
-                        fields[7], Integer.parseInt(fields[8]), Integer.parseInt(fields[9]),
+                        Integer.parseInt(fields[5]), 
+                        Integer.parseInt(fields[6]),
+                        fields[7], Integer.parseInt(fields[8]), 
+                        Integer.parseInt(fields[9]),
                         fields[10], fields[11], Integer.parseInt(fields[12]),
                         Integer.parseInt(fields[13]), Integer.parseInt(fields[14]),
                         Integer.parseInt(fields[15]), Integer.parseInt(fields[16]),
@@ -252,9 +247,60 @@ public class DAOManagerJDBCImpl implements DAOManager{
 
 	@Override
 	public Match GetMatch(Date matchDay, Team home, Team away) {
-		// TODO Auto-generated method stub
-		return null;
+	    Match match = null;
+	    boolean found = false;
+
+	    try (CallableStatement callableStatement = connection.prepareCall("{call GetMatch(?,?,?)}")) {
+
+	    	// The INT parameters
+	        callableStatement.setDate(1, matchDay);
+	        callableStatement.setString(2, home.getAbv());
+	        callableStatement.setString(3, away.getAbv());
+
+	        found = callableStatement.execute();
+
+	        // If there's any result
+	        if (found) {
+	            // Process the ResultSet
+	            try (ResultSet resultSet = callableStatement.getResultSet()) {
+	                // Try-With-Resources to process the ResultSet and autoClose it
+	                if (resultSet.next()) {
+	                    // if there's a match, create a Match object
+	                    match = new Match(
+	                            resultSet.getString("Division"),
+	                            resultSet.getDate("DateOfMatch"),
+	                            resultSet.getTime("TimeOfMatch"),
+	                            resultSet.getString("HomeTeamAbv"),
+	                            resultSet.getString("AwayTeamAbv"),
+	                            resultSet.getInt("FTHG"),
+	                            resultSet.getInt("FTAG"),
+	                            resultSet.getString("FTR"),
+	                            resultSet.getInt("HTHG"),
+	                            resultSet.getInt("HTAG"),
+	                            resultSet.getString("HTR"),
+	                            resultSet.getString("Referee"),
+	                            resultSet.getInt("HS"),
+	                            resultSet.getInt("ASS"),
+	                            resultSet.getInt("HST"),
+	                            resultSet.getInt("AST"),
+	                            resultSet.getInt("HF"),
+	                            resultSet.getInt("AF"),
+	                            resultSet.getInt("HC"),
+	                            resultSet.getInt("AC"),
+	                            resultSet.getInt("HY"),
+	                            resultSet.getInt("AY"),
+	                            resultSet.getInt("HR"),
+	                            resultSet.getInt("AR"));
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return match;
 	}
+
 
 	@Override
 	public int HomeGoals() {

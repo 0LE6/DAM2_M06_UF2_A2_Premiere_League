@@ -4,6 +4,9 @@ import DAO.DAOManager;
 import DAO.DAOManagerFactory;
 import MODEL.Team;
 
+import java.sql.Date;
+import java.sql.Time;
+
 public class MainTest {
 
 	public static void main(String[] args) {
@@ -26,10 +29,13 @@ public class MainTest {
 		System.out.println(dao.GetTeamAbbreviation("Man City"));
 		
 		// Method 5 & 6
-		dao.ImportMatches(RESULTS_FILE);
+		//dao.ImportMatches(RESULTS_FILE);
 		
-		// Method 7
-		
+		// Method 
+		Date dateOfMatch = Date.valueOf("2022-08-27");
+		Team homeTeam = dao.GetTeam("LIV");
+		Team awayTeam = dao.GetTeam("BOU");
+		System.out.println(dao.GetMatch(dateOfMatch, homeTeam, awayTeam));
 		
 		// Methods 8 & 9
 		
