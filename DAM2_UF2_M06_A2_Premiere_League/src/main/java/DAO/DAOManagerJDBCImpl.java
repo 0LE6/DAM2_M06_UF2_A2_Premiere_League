@@ -34,8 +34,11 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	public boolean AddTeam(Team oneTeam) {
 	    boolean success = true; // if everything is OK i'll return true
 
-	    try (CallableStatement callableStatement = connection.prepareCall("{call AddTeam(?, ?, ?, ?)}")) {
-	        // AutoCommit -> OFF
+	    // Using : try-with-resources
+	    try (CallableStatement callableStatement 
+	    		= connection.prepareCall("{call AddTeam(?, ?, ?, ?)}")) {
+	        
+	    	// AutoCommit -> OFF
 	        connection.setAutoCommit(false);
 
 	        callableStatement.setString(1, oneTeam.getClubName());
@@ -44,6 +47,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	        callableStatement.setString(4, oneTeam.getLogoLink());
 
 	        connection.commit(); // if there's no problem, it'll commit
+	        
 	    } catch (SQLException e) {
 	        success = false; // if there's a problem, it'll return false
 	        e.printStackTrace();
