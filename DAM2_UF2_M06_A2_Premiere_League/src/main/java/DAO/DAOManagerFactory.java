@@ -1,10 +1,8 @@
 package DAO;
 
-import java.sql.SQLException;
-
 public class DAOManagerFactory {
 
-	public DAOManager createDAOManager() throws SQLException {
+	public DAOManager createDAOManager() {
 		return new DAOManagerJDBCImpl();
 	}
 }

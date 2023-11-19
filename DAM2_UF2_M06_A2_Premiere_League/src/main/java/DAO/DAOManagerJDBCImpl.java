@@ -17,11 +17,17 @@ public class DAOManagerJDBCImpl implements DAOManager, AutoCloseable{
 	private  final String PASSWORD = "";
 	private Connection con;
 	
-	public DAOManagerJDBCImpl() throws SQLException {
-		this.con = DriverManager.getConnection(
-				this.JDBC_URL, 
-				this.USER, 
-				this.PASSWORD);
+	public DAOManagerJDBCImpl() {
+		try {
+			this.con = DriverManager.getConnection(
+					this.JDBC_URL, 
+					this.USER, 
+					this.PASSWORD);
+		} 
+		catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
 	}
 	
 	@Override
