@@ -111,9 +111,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	                }
 	            }
 	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+	    } catch (SQLException e) { e.printStackTrace(); }
 
 	    return team;
 	}
