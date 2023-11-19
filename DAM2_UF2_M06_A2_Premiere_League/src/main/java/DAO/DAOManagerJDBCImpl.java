@@ -89,34 +89,35 @@ public class DAOManagerJDBCImpl implements DAOManager{
 
 	@Override
 	public Team GetTeam(String teamAbbreviation) {
-		
-		Team team = null;
-		boolean found = false;
-		try (CallableStatement callableStatement = connection.prepareCall("call GetTeam(?)")) {
-			
-			try {
-				// Passing the IN parameter
-				callableStatement.setString(1,  teamAbbreviation);
-				found = callableStatement.execute(); 
+	    Team team = null;
+	    boolean found = false;
+	    
+	    try (CallableStatement callableStatement = connection.prepareCall("call GetTeam(?)")) {
+	        // Passing the IN parameter
+	        callableStatement.setString(1, teamAbbreviation);
+	        found = callableStatement.execute();
 
-				if (found) {
-	                ResultSet resultSet = callableStatement.getResultSet();
-	                try {
-	                    if (resultSet.next()) {
-	                        team = new Team(
-	                                resultSet.getString("club_name"),
-	                                teamAbbreviation,
-	                                resultSet.getString("hex_code"),
-	                                resultSet.getString("logo_link"));
-	                    }
-	                } finally { resultSet.close(); }
+	        // If there's any result
+	        if (found) {
+	            // we enter here and process it w/ ResultSet
+	            try (ResultSet resultSet = callableStatement.getResultSet()) {
+	                // Try-Catch to process the ResultSet
+	                if (resultSet.next()) { /* if there's any */
+	                    team = new Team(
+	                            resultSet.getString("club_name"),
+	                            teamAbbreviation,
+	                            resultSet.getString("hex_code"),
+	                            resultSet.getString("logo_link"));
+	                }
 	            }
-								
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e) { e.printStackTrace(); }
-		
-		return team;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return team;
 	}
+
 
 	@Override
 	public String GetTeamAbbreviation(String teamName) {
