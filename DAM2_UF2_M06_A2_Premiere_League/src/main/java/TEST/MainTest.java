@@ -25,7 +25,13 @@ public class MainTest {
 		// Method 4
 		System.out.println(dao.GetTeamAbbreviation("Man City"));
 		
-		// Method 5
+		// Method 5 & 6
+		dao.ImportMatches(RESULTS_FILE);
+		
+		// Method 7
+		
+		
+		// Methods 8 & 9
 		
 	}
 
