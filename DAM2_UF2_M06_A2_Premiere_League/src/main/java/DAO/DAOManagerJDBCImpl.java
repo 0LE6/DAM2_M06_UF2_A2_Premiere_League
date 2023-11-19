@@ -13,8 +13,8 @@ import MODEL.Team;
 public class DAOManagerJDBCImpl implements DAOManager, AutoCloseable{
 
 	private final String JDBC_URL = "jdbc:mysql://localhost:3306/1premiereleague?serverTimezone=UTC";
-	private  final String USER = "root";
-	private  final String PASSWORD = "";
+	private final String USER = "root";
+	private final String PASSWORD = "";
 	private Connection con;
 	
 	public DAOManagerJDBCImpl() {
@@ -26,8 +26,7 @@ public class DAOManagerJDBCImpl implements DAOManager, AutoCloseable{
 		} 
 		catch (SQLException e) {
             e.printStackTrace();
-        }
-		
+        }	
 	}
 	
 	@Override
