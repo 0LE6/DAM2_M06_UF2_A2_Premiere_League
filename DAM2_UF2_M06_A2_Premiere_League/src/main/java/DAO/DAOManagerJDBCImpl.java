@@ -31,41 +31,28 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	}
 	
 	@Override
-    public boolean AddTeam(Team oneTeam) {
-        boolean success = false;
-        try {
-        	// AutoCommit -> OFF
-            connection.setAutoCommit(false);
+	public boolean AddTeam(Team oneTeam) {
+	    boolean success = true; // if everything is OK i'll return true
 
-            String storedProcedureCall = "{call AddTeam(?, ?, ?, ?)}";
-            CallableStatement cS = connection.prepareCall(storedProcedureCall);
-            cS.setString(1, oneTeam.getClubName());
-            cS.setString(2, oneTeam.getAbv());
-            cS.setString(3, oneTeam.getHexCode());
-            cS.setString(4, oneTeam.getLogoLink());
+	    try (CallableStatement callableStatement = connection.prepareCall("{call AddTeam(?, ?, ?, ?)}")) {
+	        // AutoCommit -> OFF
+	        connection.setAutoCommit(false);
 
-            success = cS.execute();
-            if (success) connection.commit();
-            
-        } catch (SQLException e) {
-            success = false;
-            e.printStackTrace();
-            try {
-                connection.rollback();
-            } catch (SQLException rollbackException) {
-                rollbackException.printStackTrace();
-            }
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-                close();
-            } catch (SQLException autoCommitException) {
-                autoCommitException.printStackTrace();
-            }
-            
-        }
-        return success;
-    }
+	        callableStatement.setString(1, oneTeam.getClubName());
+	        callableStatement.setString(2, oneTeam.getAbv());
+	        callableStatement.setString(3, oneTeam.getHexCode());
+	        callableStatement.setString(4, oneTeam.getLogoLink());
+
+	        connection.commit(); // if there's no problem, it'll commit
+	    } catch (SQLException e) {
+	        success = false; // if there's a problem, it'll return false
+	        e.printStackTrace();
+	    }
+
+	    return success;
+	}
+
+
 
 	@Override
 	public void ImportTeams(String fileTeams) {
