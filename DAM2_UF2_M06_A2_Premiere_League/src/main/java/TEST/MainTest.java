@@ -19,7 +19,7 @@ public class MainTest {
 
         try {
             DAOManagerFactory daoFac = new DAOManagerFactory();
-            dao = daoFac.createDAOManager();
+            dao = daoFac.createDAOManager(); 
 
             // Methods 1 & 2
             // dao.ImportTeams(CLUBS_FILE);
