@@ -1,14 +1,14 @@
 # Premier2223 DAOManager Project
 
-Este proyecto se centra en la gestión de datos de la temporada 2022-2023 de la Premier League utilizando el patrón DAO y una base de datos MySQL llamada 1premiereleague.
+This project focuses on managing data from the 2022-2023 Premier League season using the DAO pattern and a MySQL database named 1premiereleague.
 
-## Paso a Paso
+## Step by Step
 
-### Paso A: Crear la Base de Datos
+### Step A: Create the Database
 
-1. Abre phpMyAdmin.
-2. Crea la base de datos `1premiereleague`.
-3. Crea las siguientes tablas:
+1. Open phpMyAdmin.
+2. Create the `1premiereleague` database.
+3. Create the following tables:
 
    #### TEAM Table
    - **Primary Key:** Team Abbreviation
@@ -31,26 +31,25 @@ Este proyecto se centra en la gestión de datos de la temporada 2022-2023 de la 
 
 ![image](https://github.com/0LE6/DAM2_M06_UF2_A2_Premiere_League/assets/135649528/c6710bca-4011-41c1-9a44-85e62d25ccf8)
 
+### Step B: Create the Maven Project
 
-### Paso B: Crear el Proyecto Maven
+1. Create a Maven project.
+2. Add the necessary dependencies.
 
-1. Crea un proyecto Maven.
-2. Agrega las dependencias necesarias.
-
-### Paso C: Modelos y DAOManager
+### Step C: Models and DAOManager
 
 1. **Model Classes:**
-   - `Team`: Representa la información de un equipo.
-   - `Match`: Representa la información de un partido.
+   - `Team`: Represents information about a team.
+   - `Match`: Represents information about a match.
 
 2. **DAOManager Interface:**
-   - Define las operaciones CRUD necesarias.
+   - Defines necessary CRUD operations.
 
 3. **DAOManagerJDBCImpl:**
-   - Implementa las operaciones definidas en la interfaz utilizando el patrón DAO.
-   - Incluye procedimientos almacenados para operaciones específicas.
+   - Implements operations defined in the interface using the DAO pattern.
+   - Includes stored procedures for specific operations.
 
-### Métodos Implementados en DAOManagerJDBCImpl:
+### Implemented Methods in DAOManagerJDBCImpl:
 
 - `public boolean AddTeam(Team oneTeam)`
 - `public void ImportTeams(String fileTeams)`
@@ -65,18 +64,18 @@ Este proyecto se centra en la gestión de datos de la temporada 2022-2023 de la 
 - `public int RedCards(Team oneTeam)`
 - `public ArrayList<Team> TopRedCards()`
 
-### Ejemplo de Uso
+### Usage Example
 
 ```java
-// Crea una instancia de DAOManagerJDBCImpl
+// Create an instance of DAOManagerJDBCImpl
 DAOManager daoManager = new DAOManagerJDBCImpl();
 
-// Ejecuta y prueba cada método
+// Execute and test each method
 daoManager.AddTeam(new Team("Arsenal", "ARS", "#FF0000", "arsenal_logo.png"));
 daoManager.ImportTeams("teams.csv");
-// (Continúa con las demás operaciones)
+// (Continue with other operations)
 
-// Cierra la conexión al finalizar
+// Close the connection at the end
 daoManager.close();
 
 ![image](https://github.com/0LE6/DAM2_M06_UF2_A2_Premiere_League/assets/135649528/04207c66-af8a-491b-8707-c1290f533d31)
