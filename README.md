@@ -29,6 +29,9 @@ Este proyecto se centra en la gestión de datos de la temporada 2022-2023 de la 
      - Away Team Abbreviation
      - (Add other fields as per Kaggle dataset)
 
+![image](https://github.com/0LE6/DAM2_M06_UF2_A2_Premiere_League/assets/135649528/c6710bca-4011-41c1-9a44-85e62d25ccf8)
+
+
 ### Paso B: Crear el Proyecto Maven
 
 1. Crea un proyecto Maven.
