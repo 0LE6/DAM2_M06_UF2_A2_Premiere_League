@@ -161,8 +161,8 @@ public class DAOManagerJDBCImpl implements DAOManager{
 		        callableStatement.setTime(3, oneMatch.getTime());
 		        
 		        // Using the method GetTeamAbbreviation:
-		        callableStatement.setString(4, GetTeamAbbreviation(oneMatch.getHomeTeamAbv()));
-		        callableStatement.setString(5, GetTeamAbbreviation(oneMatch.getAwayTeamAbv()));
+		        callableStatement.setString(4, oneMatch.getHomeTeamAbv());
+		        callableStatement.setString(5, oneMatch.getAwayTeamAbv());
 		        
 		        callableStatement.setInt(6, oneMatch.getFthg());
 		        callableStatement.setInt(7, oneMatch.getFtag());
@@ -223,7 +223,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	            Time time = Time.valueOf(fields[2] + ":00");
  
 	            Match match = new Match(
-	            		fields[0], date, time, fields[3], fields[4],
+	            		fields[0], date, time, GetTeamAbbreviation(fields[3]), GetTeamAbbreviation(fields[4]),
                         Integer.parseInt(fields[5]), 
                         Integer.parseInt(fields[6]),
                         fields[7], Integer.parseInt(fields[8]), 
