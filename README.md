@@ -34,7 +34,9 @@ This project is part of the Data Access Module at Institut Montilivi (Girona).
 
 ---------------
 
-![image](https://github.com/0LE6/DAM2_M06_UF2_A2_Premiere_League/assets/135649528/c6710bca-4011-41c1-9a44-85e62d25ccf8)
+<p align="center">
+  <img src="https://github.com/0LE6/DAM2_M06_UF2_A2_Premiere_League/assets/135649528/c6710bca-4011-41c1-9a44-85e62d25ccf8" alt="Premier League Logo">
+</p>
 
 ---------------
 
