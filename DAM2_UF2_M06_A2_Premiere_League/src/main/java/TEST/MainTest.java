@@ -10,8 +10,7 @@ import java.sql.Date;
 public class MainTest {
 
 	public static void main(String[] args) {
-
-		// Here I'll do the test for all methods
+		
 		final String CLUBS_FILE = "clubs.csv";
 		final String RESULTS_FILE = "results.csv";
 		

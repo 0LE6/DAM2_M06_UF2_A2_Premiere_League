@@ -1,0 +1,200 @@
+I)
+DELIMITER //
+
+CREATE PROCEDURE AddTeam(
+    IN p_clubName VARCHAR(255),
+    IN p_abv VARCHAR(3),
+    IN p_hexCode VARCHAR(6),
+    IN p_logoLink VARCHAR(255)
+)
+BEGIN
+    INSERT INTO Team (club_name, abv, hex_code, logo_link)
+    VALUES (p_clubName, p_abv, p_hexCode, p_logoLink);
+END //
+
+-------------------------------------------------------------
+
+II)
+DELIMITER //
+
+CREATE PROCEDURE GetTeam(
+    IN p_abbreviation VARCHAR(3)
+)
+BEGIN
+    SELECT * FROM Team
+    WHERE abv = p_abbreviation;
+END //
+
+DELIMITER ;
+
+-------------------------------------------------------------
+
+III)
+DELIMITER //
+
+CREATE PROCEDURE GetTeamAbbreviation(
+    IN p_clubName VARCHAR(255),
+    OUT p_abbreviation VARCHAR(3)
+)
+BEGIN
+    SELECT abv INTO p_abbreviation
+    FROM Team
+    WHERE club_name = p_clubName;
+END //
+
+DELIMITER ;
+
+-------------------------------------------------------------
+
+IV)
+DELIMITER //
+
+CREATE PROCEDURE AddMatch(
+    IN p_Division VARCHAR(255),
+    IN p_DateOfMatch DATE,
+    IN p_TimeOfMatch TIME,
+    IN p_HomeTeamAbv VARCHAR(3),
+    IN p_AwayTeamAbv VARCHAR(3),
+    IN p_FTHG INT(3),
+    IN p_FTAG INT(3),
+    IN p_FTR VARCHAR(1),
+    IN p_HTHG INT(3),
+    IN p_HTAG INT(3),
+    IN p_HTR VARCHAR(1),
+    IN p_Referee VARCHAR(255),
+    IN p_HS INT(3),
+    IN p_ASS INT(3),
+    IN p_HST INT(3),
+    IN p_AST INT(3),
+    IN p_HF INT(3),
+    IN p_AF INT(3),
+    IN p_HC INT(3),
+    IN p_AC INT(3),
+    IN p_HY INT(3),
+    IN p_AY INT(3),
+    IN p_HR INT(3),
+    IN p_AR INT(3)
+)
+BEGIN
+    INSERT INTO plmatch (
+        Division, DateOfMatch, TimeOfMatch, HomeTeamAbv, AwayTeamAbv, FTHG, FTAG, FTR, HTHG, HTAG,
+        HTR, Referee, HS, ASS, HST, AST, HF, AF, HC, AC, HY, AY, HR, AR
+    ) VALUES (
+        p_Division, p_DateOfMatch, p_TimeOfMatch, p_HomeTeamAbv, p_AwayTeamAbv, p_FTHG, p_FTAG, p_FTR,
+        p_HTHG, p_HTAG, p_HTR, p_Referee, p_HS, p_ASS, p_HST, p_AST, p_HF, p_AF, p_HC,
+        p_AC, p_HY, p_AY, p_HR, p_AR
+    );
+END //
+
+DELIMITER ;
+
+-------------------------------------------------------------
+
+V)
+DELIMITER //
+
+CREATE PROCEDURE GetMatch(
+    IN p_dateOfMatch DATE,
+    IN p_homeTeamAbv VARCHAR(3),
+    IN p_awayTeamAbv VARCHAR(3)
+)
+BEGIN
+    SELECT *
+    FROM plmatch
+    WHERE DateOfMatch = p_dateOfMatch AND HomeTeamAbv = p_homeTeamAbv AND AwayTeamAbv = p_awayTeamAbv;
+END //
+
+DELIMITER ;
+
+
+-------------------------------------------------------------
+
+VI)
+DELIMITER //
+
+CREATE PROCEDURE GetHomeGoals(OUT totalHomeGoals INT)
+BEGIN
+    SELECT SUM(FTHG) INTO totalHomeGoals FROM plmatch;
+END //
+
+DELIMITER ;
+
+-------------------------------------------------------------
+
+VII)
+DELIMITER //
+
+CREATE PROCEDURE GetAwayGoals(OUT totalAwayGoals INT)
+BEGIN
+    SELECT SUM(FTAG) INTO totalAwayGoals FROM plmatch;
+END //
+
+DELIMITER ;
+
+-------------------------------------------------------------
+
+VIII)
+DELIMITER //
+
+CREATE PROCEDURE GetMatchesOfTeam(
+    IN p_teamAbv VARCHAR(3)
+)
+BEGIN
+    SELECT *
+    FROM plmatch
+    WHERE HomeTeamAbv = p_teamAbv OR AwayTeamAbv = p_teamAbv;
+END //
+
+DELIMITER ;
+
+
+-------------------------------------------------------------
+
+IX)
+DELIMITER //
+
+CREATE PROCEDURE GetRedCardsCount(
+    IN p_teamAbv VARCHAR(3),
+    OUT p_totalRedCards INT
+)
+BEGIN
+    SELECT SUM(HR + AR) INTO p_totalRedCards
+    FROM plmatch
+    WHERE HomeTeamAbv = p_teamAbv OR AwayTeamAbv = p_teamAbv;
+END //
+
+DELIMITER ;
+
+-------------------------------------------------------------
+
+X)
+DELIMITER //
+
+CREATE PROCEDURE TopRedCards()
+SELECT t.club_name, t.abv, t.hex_code, t.logo_link, 
+           COALESCE(SUM(COALESCE(m.AR, 0) + COALESCE(m.HR, 0)), 0) AS redCards
+    FROM team t
+    	LEFT JOIN plmatch m ON t.abv IN (m.HomeTeamAbv, m.AwayTeamAbv)
+    GROUP BY t.club_name, t.abv, t.hex_code, t.logo_link
+    ORDER BY redCards DESC
+    LIMIT 1
+END //
+
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
