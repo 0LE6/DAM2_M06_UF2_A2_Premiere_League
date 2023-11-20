@@ -3,7 +3,7 @@
 This project focuses on managing data from the 2022-2023 Premier League season using the DAO pattern and a MySQL database named 1premiereleague.
 
 **Note:**
-This project is part of the Data Access Module at Institut Montili (Girona).
+This project is part of the Data Access Module at Institut Montilivi (Girona).
 
 ## Step by Step
 
@@ -85,3 +85,7 @@ System.out.println(dao.GetTeam("CRY"));
 
 // Method 4
 System.out.println(dao.GetTeamAbbreviation("Man City"));
+
+
+**Dataset Source:**
+- [Premier League 2022-2023 Dataset](https://www.kaggle.com/datasets/evangower/premier-league-2022-2023)
