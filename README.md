@@ -9,7 +9,7 @@ This project is part of the Data Access Module at Institut Montilivi (Girona).
 
 ### Step A: Create the Database
 
-1. Open phpMyAdmin.
+1. Open `phpMyAdmin`.
 2. Create the `1premiereleague` database.
 3. Create the following tables:
 
