@@ -152,17 +152,14 @@ DELIMITER ;
 
 IX)
 DELIMITER //
+CREATE PROCEDURE redCards (IN p_teamAbv VARCHAR(40), OUT p_totalRedCards INT)
 
-CREATE PROCEDURE GetRedCardsCount(
-    IN p_teamAbv VARCHAR(3),
-    OUT p_totalRedCards INT
-)
 BEGIN
-    SELECT SUM(HR + AR) INTO p_totalRedCards
-    FROM plmatch
-    WHERE HomeTeamAbv = p_teamAbv OR AwayTeamAbv = p_teamAbv;
+    SELECT 
+        (SELECT SUM(HR) FROM match WHERE HomeTeamAbv = p_teamAbv) +
+        (SELECT SUM(AR) FROM match WHERE AwayTeamAbv = p_teamAbv)
+    INTO p_totalRedCards;
 END //
-
 DELIMITER ;
 
 -------------------------------------------------------------
@@ -172,23 +169,21 @@ DELIMITER //
 
 CREATE PROCEDURE TopRedCards()
 BEGIN
-    SELECT
-        t.club_name,
-        t.abv,
-        t.hex_code,
-        t.logo_link,
-        COALESCE(SUM(COALESCE(m.AR, 0) + COALESCE(m.HR, 0)), 0) AS redCards
-    FROM
-        team t
-        LEFT JOIN plmatch m ON t.abv IN (m.HomeTeamAbv, m.AwayTeamAbv)
-    GROUP BY
-        t.club_name,
-        t.abv,
-        t.hex_code,
-        t.logo_link
-    ORDER BY
-        redCards DESC
-    LIMIT 1;
+    -- Usamos WITH para guardar el valor temporalmente
+    WITH TeamRedCards AS (
+        SELECT t.abv, 
+               COALESCE(SUM(COALESCE((SELECT SUM(HR) FROM plmatch WHERE HomeTeamAbv = t.abv), 0) +
+                                COALESCE((SELECT SUM(AR) FROM plmatch WHERE AwayTeamAbv = t.abv), 0)), 0) AS redCards
+        FROM team t
+        GROUP BY t.abv
+    )
+
+    -- Luego lo usamos en este SELECT
+    SELECT t.club_name, t.abv, t.hex_code, t.logo_link, trc.redCards
+    FROM team t
+    JOIN TeamRedCards trc ON t.abv = trc.abv
+    WHERE trc.redCards = (SELECT MAX(redCards) FROM TeamRedCards)
+    ORDER BY trc.redCards DESC;
 END //
 
 DELIMITER ;

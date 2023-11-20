@@ -45,7 +45,7 @@ public class MainTest {
 
             // Method 10
             int count = 0;
-            Team testTeam = dao.GetTeam("ARS");
+            Team testTeam = dao.GetTeam("LIV");
             for (Match match : dao.MatchesOfTeam(testTeam)) {
                 count++;
                 System.out.println(count + "->" + match);
