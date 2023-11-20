@@ -33,7 +33,7 @@ public class MainTest {
             // Method 5 & 6
             // dao.ImportMatches(RESULTS_FILE);
 
-            // Method
+            // Method 7
             Date dateOfMatch = Date.valueOf("2022-08-27");
             Team homeTeam = dao.GetTeam("LIV");
             Team awayTeam = dao.GetTeam("BOU");
