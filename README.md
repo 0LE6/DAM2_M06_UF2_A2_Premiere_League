@@ -3,7 +3,7 @@
 This project focuses on managing data from the 2022-2023 Premier League season using the DAO pattern and a MySQL database named 1premiereleague.
 
 **Note:**
-This project is part of the Data Access Module at Institut Montilí.
+This project is part of the Data Access Module at Institut Montili (Girona).
 
 ## Step by Step
 
@@ -70,18 +70,18 @@ This project is part of the Data Access Module at Institut Montilí.
 ### Usage Example
 
 ```java
-      final String CLUBS_FILE = "clubs.csv";
-		final String RESULTS_FILE = "results.csv";
-		
-		
-		DAOManagerFactory daoFac = new DAOManagerFactory();
-		DAOManager dao = daoFac.createDAOManager();
-		
-		// Methods 1 & 2
-		//dao.ImportTeams(CLUBS_FILE);
-		
-		// Method 3
-		System.out.println(dao.GetTeam("CRY"));
-		
-		// Method 4
-		System.out.println(dao.GetTeamAbbreviation("Man City"));
+final String CLUBS_FILE = "clubs.csv";
+final String RESULTS_FILE = "results.csv";
+
+
+DAOManagerFactory daoFac = new DAOManagerFactory();
+DAOManager dao = daoFac.createDAOManager();
+
+// Methods 1 & 2
+dao.ImportTeams(CLUBS_FILE);
+
+// Method 3
+System.out.println(dao.GetTeam("CRY"));
+
+// Method 4
+System.out.println(dao.GetTeamAbbreviation("Man City"));
