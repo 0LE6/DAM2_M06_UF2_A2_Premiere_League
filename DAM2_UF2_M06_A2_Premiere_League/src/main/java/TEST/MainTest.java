@@ -43,7 +43,8 @@ public class MainTest {
 		
 		// Method 10
 		int count = 0;
-		for (Match match : dao.MatchesOfTeam(homeTeam)) {
+		Team testTeam = dao.GetTeam("FUL");
+		for (Match match : dao.MatchesOfTeam(testTeam)) {
 			
 			count++;
 			System.out.println(count + "->" + match);
@@ -51,11 +52,16 @@ public class MainTest {
 		
 		
 		// Method 11
-		
+		System.out.println(
+				"Red Cards for " + testTeam.getClubName() + " -> " +
+				dao.RedCards(testTeam) );
 		
 		
 		// Method 12
-		
+		for (Team teamWithMoreRedCards : dao.TopRedCards()) {
+			
+			System.out.println("Team w/ more Red Cards: " + teamWithMoreRedCards);
+		}
 	}
 
 }

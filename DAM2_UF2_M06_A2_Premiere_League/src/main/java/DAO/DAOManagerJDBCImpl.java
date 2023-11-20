@@ -394,14 +394,58 @@ public class DAOManagerJDBCImpl implements DAOManager{
 
 	@Override
 	public int RedCards(Team oneTeam) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int totalRedCards = 0;
+
+	    try (CallableStatement callableStatement = connection.prepareCall("{call GetRedCardsCount(?, ?)}")) {
+
+	        // Set parameters for the stored procedure
+	        callableStatement.setString(1, oneTeam.getAbv());
+	        callableStatement.registerOutParameter(2, Types.INTEGER);
+
+	        // Execute the stored procedure
+	        callableStatement.execute();
+
+	        // Retrieve the OUT parameter value
+	        totalRedCards = callableStatement.getInt(2);
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return totalRedCards;
 	}
 
 	@Override
 	public ArrayList<Team> TopRedCards() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ArrayList<Team> topTeams = new ArrayList<>();
+
+	    try (CallableStatement callableStatement = connection.prepareCall("{call TopRedCards()}")) {
+	        // No need to set parameters for this procedure
+ 
+	        // Execute the stored procedure
+	        callableStatement.execute();
+
+	        // Process the ResultSet
+	        try (ResultSet resultSet = callableStatement.getResultSet()) {
+	            while (resultSet.next()) {
+	                // Create a Team object for each team and add it to the list
+	                Team team = new Team(
+	                        resultSet.getString("club_name"),
+	                        resultSet.getString("abv"),
+	                        resultSet.getString("hex_code"),
+	                        resultSet.getString("logo_link")
+	                );
+	                topTeams.add(team);
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return topTeams;
 	}
 	
 	@Override
