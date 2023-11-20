@@ -171,16 +171,28 @@ X)
 DELIMITER //
 
 CREATE PROCEDURE TopRedCards()
-SELECT t.club_name, t.abv, t.hex_code, t.logo_link, 
-           COALESCE(SUM(COALESCE(m.AR, 0) + COALESCE(m.HR, 0)), 0) AS redCards
-    FROM team t
-    	LEFT JOIN plmatch m ON t.abv IN (m.HomeTeamAbv, m.AwayTeamAbv)
-    GROUP BY t.club_name, t.abv, t.hex_code, t.logo_link
-    ORDER BY redCards DESC
-    LIMIT 1
+BEGIN
+    SELECT
+        t.club_name,
+        t.abv,
+        t.hex_code,
+        t.logo_link,
+        COALESCE(SUM(COALESCE(m.AR, 0) + COALESCE(m.HR, 0)), 0) AS redCards
+    FROM
+        team t
+        LEFT JOIN plmatch m ON t.abv IN (m.HomeTeamAbv, m.AwayTeamAbv)
+    GROUP BY
+        t.club_name,
+        t.abv,
+        t.hex_code,
+        t.logo_link
+    ORDER BY
+        redCards DESC
+    LIMIT 1;
 END //
 
 DELIMITER ;
+
 
 
 
