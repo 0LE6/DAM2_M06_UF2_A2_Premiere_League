@@ -152,7 +152,7 @@ DELIMITER ;
 
 IX)
 DELIMITER //
-CREATE PROCEDURE redCards (IN p_teamAbv VARCHAR(40), OUT p_totalRedCards INT)
+CREATE PROCEDURE redCards (IN p_teamAbv VARCHAR(3), OUT p_totalRedCards INT)
 
 BEGIN
     SELECT 
