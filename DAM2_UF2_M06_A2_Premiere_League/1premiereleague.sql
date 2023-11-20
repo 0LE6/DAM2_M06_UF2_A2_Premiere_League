@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-11-2023 a las 15:52:01
+-- Tiempo de generación: 20-11-2023 a las 16:47:12
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -61,10 +61,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `GetMatchesOfTeam` (IN `p_teamAbv` V
     WHERE HomeTeamAbv = p_teamAbv OR AwayTeamAbv = p_teamAbv;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetRedCardsCount` (IN `p_teamAbv` VARCHAR(3), OUT `p_totalRedCards` INT)   BEGIN
-    SELECT SUM(HR + AR) INTO p_totalRedCards
-    FROM plmatch
-    WHERE HomeTeamAbv = p_teamAbv OR AwayTeamAbv = p_teamAbv;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetRedCardsCount` (IN `p_teamAbv` VARCHAR(40), OUT `p_totalRedCards` INT)   BEGIN
+    SELECT 
+        (SELECT SUM(HR) FROM plmatch WHERE HomeTeamAbv = p_teamAbv) +
+        (SELECT SUM(AR) FROM plmatch WHERE AwayTeamAbv = p_teamAbv)
+    INTO p_totalRedCards;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetTeam` (IN `p_abbreviation` VARCHAR(3))   BEGIN
@@ -79,23 +80,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `GetTeamAbbreviation` (IN `p_clubNam
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `TopRedCards` ()   BEGIN
-    SELECT
-        t.club_name,
-        t.abv,
-        t.hex_code,
-        t.logo_link,
-        COALESCE(SUM(COALESCE(m.AR, 0) + COALESCE(m.HR, 0)), 0) AS redCards
-    FROM
-        team t
-        LEFT JOIN plmatch m ON t.abv IN (m.HomeTeamAbv, m.AwayTeamAbv)
-    GROUP BY
-        t.club_name,
-        t.abv,
-        t.hex_code,
-        t.logo_link
-    ORDER BY
-        redCards DESC
-    LIMIT 1;
+    -- Common table expression (CTE) to calculate total red cards for each team
+    WITH TeamRedCards AS (
+        SELECT t.abv, 
+               COALESCE(SUM(COALESCE((SELECT SUM(HR) FROM plmatch WHERE HomeTeamAbv = t.abv), 0) +
+                                COALESCE((SELECT SUM(AR) FROM plmatch WHERE AwayTeamAbv = t.abv), 0)), 0) AS redCards
+        FROM team t
+        GROUP BY t.abv
+    )
+
+    -- Select teams with the maximum number of red cards
+    SELECT t.club_name, t.abv, t.hex_code, t.logo_link, trc.redCards
+    FROM team t
+    JOIN TeamRedCards trc ON t.abv = trc.abv
+    WHERE trc.redCards = (SELECT MAX(redCards) FROM TeamRedCards)
+    ORDER BY trc.redCards DESC;
 END$$
 
 DELIMITER ;
