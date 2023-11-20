@@ -1,4 +1,4 @@
-# Premier2223 DAOManager Project
+# DATA ACCESS WITH RELATIONAL DATABASES
 
 This project focuses on managing data from the 2022-2023 Premier League season using the DAO pattern and a MySQL database named 1premiereleague.
 
