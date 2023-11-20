@@ -1,13 +1,13 @@
 # Premier2223 DAOManager Project
 
-Este proyecto se centra en la gestión de datos de la temporada 2022-2023 de la Premier League utilizando el patrón DAO y una base de datos MySQL llamada PREMIER2223.
+Este proyecto se centra en la gestión de datos de la temporada 2022-2023 de la Premier League utilizando el patrón DAO y una base de datos MySQL llamada 1premiereleague.
 
 ## Paso a Paso
 
 ### Paso A: Crear la Base de Datos
 
 1. Abre phpMyAdmin.
-2. Crea la base de datos `PREMIER2223`.
+2. Crea la base de datos `1premiereleague`.
 3. Crea las siguientes tablas:
 
    #### TEAM Table
@@ -75,6 +75,5 @@ daoManager.ImportTeams("teams.csv");
 
 // Cierra la conexión al finalizar
 daoManager.close();
-
 
 ![image](https://github.com/0LE6/DAM2_M06_UF2_A2_Premiere_League/assets/135649528/04207c66-af8a-491b-8707-c1290f533d31)
