@@ -386,7 +386,7 @@ public class DAOManagerJDBCImpl implements DAOManager{
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	    }
+	    }    
 
 	    return arrayListOfMatches;
 	}
